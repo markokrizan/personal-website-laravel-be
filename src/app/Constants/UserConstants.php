@@ -5,6 +5,10 @@ namespace App\Constants;
 use Illuminate\Support\Str;
 
 class UserConstants {
+    const ROLE_ADMIN = 'admin';
+
+    const ROLE_REGULAR = 'regular';
+
     const AVATAR_PATH = '/users/';
 
     const AVATAR_EXTENSION = 'jpg';

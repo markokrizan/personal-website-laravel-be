@@ -21,21 +21,39 @@ Route::group([ 'namespace' => 'Api' ], function () {
     });
 
     Route::group([
-        'prefix' => 'user',
-        'namespace' => 'User'
+        'prefix' => 'accounts'
     ], function () {
-        Route::post('forgot-password', 'ForgotPasswordController@forgotPassword');
-        Route::post('reset-password', 'ForgotPasswordController@resetPassword');
+        Route::post('/forgot-password', 'ForgotPasswordController@forgotPassword');
+        Route::post('/reset-password', 'ForgotPasswordController@resetPassword');
+        Route::get('/forgot-password-token/{forgotPasswordToken}', [
+            'as' => 'userForgotPasswordEmail',
+            'uses' => 'ForgotPasswordController@resetPasswordLink'
+        ]);
+        Route::post('/verify/resend', 'UserController@sendVerifyEmail');
+
+        Route::group(['middleware' => [ 'auth:api' ]], function () {
+            Route::post('/change-password', 'UserController@changePassword');
+            Route::delete('/deactivate-account', 'UserController@deactivate');
+        });
     });
 
-    Route::group([ 'middleware' => [ 'auth:api', 'email-verified' ] ], function () {
-        Route::group([
-            'prefix' => 'user',
-            'namespace' => 'User'
-        ], function () {
-            Route::post('change-password', 'UserController@changePassword');
-            Route::post('/', 'UserController@updateProfile');
-            Route::post('/verify/resend', 'UserController@sendVerifyEmail');
-        });
+    Route::group([
+        'prefix' => 'users',
+        'middleware' => ['auth:api']
+    ], function () {
+        Route::get('/', 'UserController@index');
+        Route::get('/{user}', 'UserController@show');
+        Route::post('/{user}', 'UserController@update');
+        Route::delete('/{user}', 'UserController@destroy');
+    });
+
+    Route::group([
+        'prefix' => 'posts',
+        'middleware' => ['auth:api']
+    ], function () {
+        Route::get('/', 'PostController@index');
+        Route::get('/{post}', 'PostController@show');
+        Route::post('/{post}', 'PostController@update');
+        Route::delete('/{post}', 'PostController@destroy');
     });
 });

@@ -41,9 +41,9 @@ services:
 
   db:
     image: mariadb:10.2
-    container_name: db
+    container_name: database
     environment:
-      MYSQL_DATABASE: laravel-boilerplate
+      MYSQL_DATABASE: personal-website
       MYSQL_USER: laravel
       MYSQL_PASSWORD: laravel
       MYSQL_ROOT_PASSWORD: root
